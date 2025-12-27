@@ -48,7 +48,9 @@ if(window.location.hash === "#/site") {
     //window.location.hash = "#/posts";
 
     const siteIframe = document.querySelector(".site-frame");
-    const src = siteIframe.src.replace("admin", "");
+    const src = siteIframe.src.replace("admin.", "");
 
-    siteIframe.src = src;
+    console.log(src);
+
+    //siteIframe.src = src;
 }
