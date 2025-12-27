@@ -1,48 +1,41 @@
-console.log("Script iniciado");
+console.log("Script carregado!");
 
-// Função para fazer as substituições
-function replaceInContainers() {
-    const containerShares = document.querySelectorAll(".shade-activitypub, .epm-modal-container");
-    
-    if (containerShares.length > 0) {
-        console.log("Encontrou containers:", containerShares.length);
-        
-        for (const container of containerShares) {
-            const elements = container.querySelectorAll("*");
-            elements.forEach(element => {
-                if (element.innerHTML.includes("admin.guaracinews.com.br")) {
-                    console.log("Substituindo em:", element);
-                    element.innerHTML = element.innerHTML.replace(/admin.guaracinews.com.br/g, "guaracinews.com.br");
-                }
-            });
+function replaceTextInNode(node, searchText, replaceText) {
+    if (node.nodeType === 3) { // Apenas nós de texto
+        if (node.textContent.includes(searchText)) {
+            node.textContent = node.textContent.replace(new RegExp(searchText, 'g'), replaceText);
+        }
+    } else {
+        for (let child of node.childNodes) {
+            replaceTextInNode(child, searchText, replaceText);
         }
     }
 }
 
-// Executa imediatamente
-replaceInContainers();
+function processContainers() {
+    const containerShares = document.querySelectorAll(".shade-activitypub, .epm-modal-container");
+    
+    containerShares.forEach(container => {
+        replaceTextInNode(container, 'admin.guaracinews.com.br', 'guaracinews.com.br');
+    });
+}
 
-// Observa mudanças no DOM
-const observer = new MutationObserver(function(mutations) {
-    replaceInContainers();
+// Executa imediatamente
+processContainers();
+
+// Observa mudanças no DOM (para conteúdo dinâmico)
+const observer = new MutationObserver(() => {
+    processContainers();
 });
 
-// Começa a observar quando o DOM estiver pronto
 if (document.body) {
     observer.observe(document.body, {
         childList: true,
         subtree: true
     });
-} else {
-    document.addEventListener('DOMContentLoaded', function() {
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    });
 }
 
-// Redirecionamento de hash
+// Redirecionamento
 if(window.location.hash === "#/site") {
     console.log("Redirecting...");
     window.location.hash = "#/posts";
