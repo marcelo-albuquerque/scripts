@@ -20,9 +20,9 @@
 
 window.addEventListener('hashchange', () => {
       console.log("Hash mudou:", window.location.hash);
-      setTimeout(processIframeOnSite, 100);
-      setTimeout(processIframeOnSite, 500);
-      setTimeout(processIframeOnSite, 1000);
+      setTimeout(processIframe, 100);
+      setTimeout(processIframe, 500);
+      setTimeout(processIframe, 1000);
     });
 
 if(window.location.hash === "#/site") {
