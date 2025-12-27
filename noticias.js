@@ -1,53 +1,54 @@
-console.log("Script carregado!");
+console.log("Script iniciado");
 
-function replaceTextInNode(node, searchText, replaceText) {
-    if (node.nodeType === 3) { // Apenas nós de texto
-        if (node.textContent.includes(searchText)) {
-            console.log("✅ Encontrado e substituindo:", node.textContent);
-            node.textContent = node.textContent.replace(new RegExp(searchText, 'g'), replaceText);
-        }
-    } else {
-        for (let child of node.childNodes) {
-            replaceTextInNode(child, searchText, replaceText);
-        }
-    }
-}
-
-function processContainers() {
-    const containerShares = document.querySelectorAll(".shade-activitypub, .epm-modal-container");
-
-    console.log("📦 Containers encontrados:", containerShares.length);
-
-    if (containerShares.length === 0) {
-        console.log("⚠️ Nenhum container encontrado! Verificando se as classes existem...");
-        console.log("Todos os elementos com classe:", document.querySelectorAll("[class]").length);
-    }
+// Função para fazer as substituições
+function replaceInContainers() {
+    const containerShares = document.getElementsByClassName("shade-activitypub");
     
-    containerShares.forEach(container => {
-        console.log(`🔍 Processando container ${index + 1}:`, container);
-        console.log("Conteúdo do container:", container.textContent.substring(0, 200));
+    if (containerShares.length > 0) {
+        console.log("Encontrou containers:", containerShares.length);
         
-        replaceTextInNode(container, 'admin.guaracinews.com.br', 'guaracinews.com.br');
-    });
+        for (const container of containerShares) {
+            const elements = container.querySelectorAll("*");
+            elements.forEach(element => {
+                if (element.innerHTML.includes("admin.guaracinews.com.br")) {
+                    console.log("Substituindo em:", element);
+                    element.innerHTML = element.innerHTML.replace(/admin.guaracinews.com.br/g, "guaracinews.com.br");
+                }
+            });
+        }
+    }
 }
 
 // Executa imediatamente
-processContainers();
+replaceInContainers();
 
-// Observa mudanças no DOM (para conteúdo dinâmico)
-const observer = new MutationObserver(() => {
-    processContainers();
+// Observa mudanças no DOM
+const observer = new MutationObserver(function(mutations) {
+    replaceInContainers();
 });
 
+// Começa a observar quando o DOM estiver pronto
 if (document.body) {
     observer.observe(document.body, {
         childList: true,
         subtree: true
     });
+} else {
+    document.addEventListener('DOMContentLoaded', function() {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
 }
 
-// Redirecionamento
+// Redirecionamento de hash
 if(window.location.hash === "#/site") {
-    console.log("Redirecting...");
-    window.location.hash = "#/posts";
+    //console.log("Redirecting...");
+    //window.location.hash = "#/posts";
+
+    const siteIframe = document.querySelector(".site-frame");
+    const src = siteIframe.src.replace("admin", "");
+
+    siteIframe.src = src;
 }
