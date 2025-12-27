@@ -45,10 +45,11 @@ if (document.body) {
 // Redirecionamento de hash
 if(window.location.hash === "#/site") {
     if (document.body) {
+        const body = document.body;
         //console.log("Redirecting...");
         //window.location.hash = "#/posts";
     
-        const siteIframe = document.querySelector(".site-frame");
+        const siteIframe = body.querySelector(".site-frame");
         //const src = siteIframe.src.replace("admin.", "");
     
         console.log(siteIframe);
