@@ -1,43 +1,42 @@
-if(window.location.hash === "#/site") {
-    console.log("Hash é #/site");
-    
-    // Função para processar o iframe
-    function processIframe() {
-        const siteIframe = document.querySelector(".site-frame");
-        
-        if (siteIframe) {
-            console.log("✅ Iframe encontrado:", siteIframe);
-            
-            const currentSrc = siteIframe.src;
-            console.log("📍 Src atual:", currentSrc);
-            
-            // Remove "admin." do domínio
-            const newSrc = currentSrc.replace("admin.", "");
-            console.log("🔄 Novo src:", newSrc);
-            
-            siteIframe.src = newSrc;
-        } else {
-            console.log("⚠️ Iframe .site-frame não encontrado ainda");
-        }
+function processIframeOnSite() {
+    if(window.location.hash !== "#/site") {
+        return;
     }
     
-    // Tenta imediatamente
-    processIframe();
+    console.log("Processando #/site...");
     
-    // Tenta novamente após um delay (caso o iframe carregue depois)
-    setTimeout(processIframe, 500);
-    setTimeout(processIframe, 1000);
-    setTimeout(processIframe, 2000);
+    const siteIframe = document.querySelector(".site-frame");
     
-    // Observa mudanças no DOM para quando o iframe aparecer
-    const observer = new MutationObserver(() => {
-        processIframe();
-    });
-    
-    if (document.body) {
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+    if (siteIframe && siteIframe.src.includes("admin.")) {
+        console.log("✅ Iframe encontrado, alterando src");
+        console.log("Src atual:", siteIframe.src);
+        
+        const newSrc = siteIframe.src.replace("admin.", "");
+        console.log("Novo src:", newSrc);
+        
+        siteIframe.src = newSrc;
     }
 }
+
+// Observa mudanças no DOM
+const observer = new MutationObserver(() => {
+    processIframeOnSite();
+});
+
+if (document.body) {
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
+// Escuta mudanças no hash
+window.addEventListener('hashchange', () => {
+    console.log("Hash mudou:", window.location.hash);
+    setTimeout(processIframeOnSite, 100);
+    setTimeout(processIframeOnSite, 500);
+    setTimeout(processIframeOnSite, 1000);
+});
+
+// Executa no load inicial
+processIframeOnSite();
