@@ -2,7 +2,7 @@ console.log("Script iniciado");
 
 // Função para fazer as substituições
 function replaceInContainers() {
-    const containerShares = document.getElementsByClassName("shade-activitypub");
+    const containerShares = document.querySelectorAll(".shade-activitypub, .epm-modal-container");
     
     if (containerShares.length > 0) {
         console.log("Encontrou containers:", containerShares.length);
