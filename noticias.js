@@ -1,7 +1,4 @@
-if(window.location.hash === "#/site") {
-    console.log("Hash é #/site");
-    
-    // Função para processar o iframe
+// Função para processar o iframe
     function processIframe() {
         const siteIframe = document.querySelector(".site-frame");
         
@@ -20,6 +17,16 @@ if(window.location.hash === "#/site") {
             console.log("⚠️ Iframe .site-frame não encontrado ainda");
         }
     }
+
+window.addEventListener('hashchange', () => {
+      console.log("Hash mudou:", window.location.hash);
+      setTimeout(processIframeOnSite, 100);
+      setTimeout(processIframeOnSite, 500);
+      setTimeout(processIframeOnSite, 1000);
+    });
+
+if(window.location.hash === "#/site") {
+    console.log("Hash é #/site");
     
     // Tenta imediatamente
     processIframe();
@@ -34,12 +41,7 @@ if(window.location.hash === "#/site") {
         processIframe();
     });
 
-    window.addEventListener('hashchange', () => {
-      console.log("Hash mudou:", window.location.hash);
-      setTimeout(processIframeOnSite, 100);
-      setTimeout(processIframeOnSite, 500);
-      setTimeout(processIframeOnSite, 1000);
-    });
+    
     
     if (document.body) {
         observer.observe(document.body, {
