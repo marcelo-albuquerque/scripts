@@ -1,59 +1,24 @@
-console.log("Script iniciado");
-
-// Função para fazer as substituições
-function replaceInContainers() {
-    const containerShares = document.getElementsByClassName("shade-activitypub");
-    
-    if (containerShares.length > 0) {
-        console.log("Encontrou containers:", containerShares.length);
-        
-        for (const container of containerShares) {
-            const elements = container.querySelectorAll("*");
-            elements.forEach(element => {
-                if (element.innerHTML.includes("admin.guaracinews.com.br")) {
-                    console.log("Substituindo em:", element);
-                    element.innerHTML = element.innerHTML.replace(/admin.guaracinews.com.br/g, "guaracinews.com.br");
-                }
-            });
-        }
-    }
-}
-
-// Executa imediatamente
-replaceInContainers();
-
-// Observa mudanças no DOM
-const observer = new MutationObserver(function(mutations) {
-    replaceInContainers();
-});
-
-// Começa a observar quando o DOM estiver pronto
-if (document.body) {
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-} else {
-    document.addEventListener('DOMContentLoaded', function() {
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    });
-}
-
-// Redirecionamento de hash
 if(window.location.hash === "#/site") {
-    if (document.body) {
-        const body = document.body;
-        //console.log("Redirecting...");
-        //window.location.hash = "#/posts";
+    console.log("Hash é #/site, aguardando iframe...");
     
-        const siteIframe = body.querySelector(".site-frame");
-        //const src = siteIframe.src.replace("admin.", "");
+    // Espera o iframe aparecer
+    const checkIframe = setInterval(() => {
+        const siteIframe = document.querySelector(".site-frame");
+        
+        if (siteIframe) {
+            console.log("✅ Iframe encontrado!");
+            console.log("Src atual:", siteIframe.src);
+            
+            const newSrc = siteIframe.src.replace("admin.", "");
+            console.log("Novo src:", newSrc);
+            
+            siteIframe.src = newSrc;
+            
+            // Para de verificar
+            clearInterval(checkIframe);
+        }
+    }, 100); // Verifica a cada 100ms
     
-        console.log(siteIframe);
-    
-        //siteIframe.src = src;
-    }
+    // Para de verificar após 10 segundos
+    setTimeout(() => clearInterval(checkIframe), 10000);
 }
