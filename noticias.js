@@ -1,24 +1,43 @@
 if(window.location.hash === "#/site") {
-    console.log("Hash é #/site, aguardando iframe...");
+    console.log("Hash é #/site");
     
-    // Espera o iframe aparecer
-    const checkIframe = setInterval(() => {
+    // Função para processar o iframe
+    function processIframe() {
         const siteIframe = document.querySelector(".site-frame");
         
         if (siteIframe) {
-            console.log("✅ Iframe encontrado!");
-            console.log("Src atual:", siteIframe.src);
+            console.log("✅ Iframe encontrado:", siteIframe);
             
-            const newSrc = siteIframe.src.replace("admin.", "");
-            console.log("Novo src:", newSrc);
+            const currentSrc = siteIframe.src;
+            console.log("📍 Src atual:", currentSrc);
+            
+            // Remove "admin." do domínio
+            const newSrc = currentSrc.replace("admin.", "");
+            console.log("🔄 Novo src:", newSrc);
             
             siteIframe.src = newSrc;
-            
-            // Para de verificar
-            clearInterval(checkIframe);
+        } else {
+            console.log("⚠️ Iframe .site-frame não encontrado ainda");
         }
-    }, 100); // Verifica a cada 100ms
+    }
     
-    // Para de verificar após 10 segundos
-    setTimeout(() => clearInterval(checkIframe), 10000);
+    // Tenta imediatamente
+    processIframe();
+    
+    // Tenta novamente após um delay (caso o iframe carregue depois)
+    setTimeout(processIframe, 500);
+    setTimeout(processIframe, 1000);
+    setTimeout(processIframe, 2000);
+    
+    // Observa mudanças no DOM para quando o iframe aparecer
+    const observer = new MutationObserver(() => {
+        processIframe();
+    });
+    
+    if (document.body) {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
 }
