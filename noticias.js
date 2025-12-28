@@ -1,5 +1,7 @@
 function processIframe() {
-    document.addEventListener('DOMContentLoaded', function() {
+    let find = false;
+
+    while (!find) { 
         const siteIframe = document.querySelector(".site-frame");
         
         if (siteIframe) {
@@ -13,32 +15,24 @@ function processIframe() {
             console.log("🔄 Novo src:", newSrc);
             
             siteIframe.src = newSrc;
+
+            find = true;
         } else {
             console.log("⚠️ Iframe .site-frame não encontrado ainda");
         }
-    });
+    }
+    
 }
 
 window.addEventListener('hashchange', () => {
+    if (window.location.hash === "#/site") {
       console.log("Hash mudou:", window.location.hash);
-      processIframe();
+      processIframe();  
+    }   
 });
 
 if(window.location.hash === "#/site") {
     console.log("Hash é #/site");
     
     processIframe();
-    
-    // Observa mudanças no DOM para quando o iframe aparecer
-    const observer = new MutationObserver(() => {
-        processIframe();
-    });
-    
-    
-    if (document.body) {
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
 }
