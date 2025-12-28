@@ -1,5 +1,5 @@
-// Função para processar o iframe
-    /*function processIframe() {
+function processIframe() {
+    document.addEventListener('DOMContentLoaded', function() {
         const siteIframe = document.querySelector(".site-frame");
         
         if (siteIframe) {
@@ -16,31 +16,23 @@
         } else {
             console.log("⚠️ Iframe .site-frame não encontrado ainda");
         }
-    }*/
+    });
+}
 
-/*window.addEventListener('hashchange', () => {
+window.addEventListener('hashchange', () => {
       console.log("Hash mudou:", window.location.hash);
-      setTimeout(processIframe, 100);
-      setTimeout(processIframe, 500);
-      setTimeout(processIframe, 1000);
-    });*/
+      processIframe();
+});
 
-/*if(window.location.hash === "#/site") {
+if(window.location.hash === "#/site") {
     console.log("Hash é #/site");
     
-    // Tenta imediatamente
     processIframe();
-    
-    // Tenta novamente após um delay (caso o iframe carregue depois)
-    setTimeout(processIframe, 500);
-    setTimeout(processIframe, 1000);
-    setTimeout(processIframe, 2000);
     
     // Observa mudanças no DOM para quando o iframe aparecer
     const observer = new MutationObserver(() => {
         processIframe();
     });
-
     
     
     if (document.body) {
@@ -49,4 +41,4 @@
             subtree: true
         });
     }
-}*/
+}
